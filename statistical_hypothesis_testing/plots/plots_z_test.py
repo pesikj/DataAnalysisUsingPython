@@ -4,7 +4,7 @@ from scipy.stats import norm
 import numpy as np
 import matplotlib.patches as mpatches
 from colour import Color
-from statistical_hypothesis_testing.tails import Tail
+from ..tails import Tail
 
 
 def create_critical_region_plot(alphas=[0.05, ], x_min=-3, y_max=0.5, tails=Tail.TWO_TAILED):
@@ -16,7 +16,7 @@ def create_critical_region_plot(alphas=[0.05, ], x_min=-3, y_max=0.5, tails=Tail
     alphas_with_colors = [(alphas[i], colors[-i-2]) for i in range(0, len(alphas))] 
 
     x = np.linspace(x_min, x_max, 100)
-    y = scipy.stats.norm.pdf(x,mean,std)
+    y = scipy.stats.norm.pdf(x)
     plt.plot(x,y, color='black')
 
     def generate_area(x1, x2, color):
@@ -27,7 +27,7 @@ def create_critical_region_plot(alphas=[0.05, ], x_min=-3, y_max=0.5, tails=Tail
         plt.plot([pt2 ,pt2 ],[0.0,scipy.stats.norm.pdf(pt2)], color='black')
 
         ptx = np.linspace(pt1, pt2, 10)
-        pty = scipy.stats.norm.pdf(ptx,mean,std)
+        pty = scipy.stats.norm.pdf(ptx)
 
         plt.fill_between(ptx, pty, color=color, alpha='1.0')
 
@@ -51,6 +51,4 @@ def create_critical_region_plot(alphas=[0.05, ], x_min=-3, y_max=0.5, tails=Tail
 
     plt.savefig("normal_distribution_2.png")
     plt.show()
-
-create_critical_region_plot([0.05,0.01,0.1])
 
