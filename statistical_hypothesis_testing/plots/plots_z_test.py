@@ -34,8 +34,13 @@ def create_critical_region_plot(alphas=[0.05, ], tails=Tail.TWO_TAILED, x_min=-3
 
     legend_patches = []
     for alpha, color in alphas_with_colors:
-        generate_area(x_min, norm.ppf(alpha/2), str(color))
-        generate_area(norm.ppf(1 - alpha/2), x_max, str(color))
+        if tails == Tail.TWO_TAILED:
+            generate_area(x_min, norm.ppf(alpha/2), str(color))
+            generate_area(norm.ppf(1 - alpha/2), x_max, str(color))
+        elif tails == Tail.LEFT_TAILED:
+            generate_area(x_min, norm.ppf(alpha), str(color))
+        elif tails == Tail.RIGHT_TAILED:
+            generate_area(norm.ppf(1 - alpha), x_max, str(color))
         legend_patches.append(mpatches.Patch(color=str(color), label=r'$\alpha = {:.2f} $'.format(alpha)))
 
     plt.legend(handles=legend_patches)
@@ -65,7 +70,7 @@ def create_p_value_plot(statistics,alpha=0.05, tails=Tail.TWO_TAILED, x_min=-3, 
         pt2 = x2
         plt.plot([pt2 ,pt2 ],[0.0,scipy.stats.norm.pdf(pt2)], color='black')
 
-        ptx = np.linspace(pt1, pt2, 10)
+        ptx = np.linspace(pt1, pt2, 100)
         pty = scipy.stats.norm.pdf(ptx)
 
         plt.fill_between(ptx, pty, facecolor=color, alpha='1.0', hatch=hatch, edgecolor=edgecolor)
@@ -73,12 +78,19 @@ def create_p_value_plot(statistics,alpha=0.05, tails=Tail.TWO_TAILED, x_min=-3, 
 
     legend_patches = []
 
-    generate_area(x_min, norm.ppf(alpha/2), 'red')
-    generate_area(norm.ppf(1 - alpha/2), x_max, 'red')
-    legend_patches.append(mpatches.Patch(color='red', label='Critical Region'.format(alpha)))
+    if tails == Tail.TWO_TAILED:
+        generate_area(x_min, norm.ppf(alpha/2), 'red')
+        generate_area(norm.ppf(1 - alpha/2), x_max, 'red')
+        generate_area(x_min, -abs(statistics), 'none', hatch='///', edgecolor='blue')
+        generate_area(abs(statistics), x_max, 'none', hatch='///', edgecolor='blue')
+    elif tails == Tail.LEFT_TAILED:
+        generate_area(x_min, norm.ppf(alpha), 'red')
+        generate_area(x_min, statistics, 'none', hatch='///', edgecolor='blue')
+    elif tails == Tail.RIGHT_TAILED:
+        generate_area(norm.ppf(1 - alpha), x_max, 'red')
+        generate_area(statistics, x_max, 'none', hatch='///', edgecolor='blue')
 
-    generate_area(x_min, -abs(statistics), 'none', hatch='///', edgecolor='blue')
-    generate_area(abs(statistics), x_max, 'none', hatch='///', edgecolor='blue')
+    legend_patches.append(mpatches.Patch(color='red', label='Critical Region'.format(alpha)))
     legend_patches.append(mpatches.Patch(color='blue', label='p-value'.format(alpha)))
 
     plt.legend(handles=legend_patches)
