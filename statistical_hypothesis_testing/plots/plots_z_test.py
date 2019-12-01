@@ -78,14 +78,14 @@ def create_p_value_plot(statistics,alpha=0.05, tails=Tail.TWO_TAILED, x_min=-3, 
     if tails == Tail.TWO_TAILED:
         generate_area(x_min, norm.ppf(alpha/2), '#FF7F50')
         generate_area(norm.ppf(1 - alpha/2), x_max, '#FF7F50')
-        generate_area(x_min, -abs(statistics), 'none', hatch='///', edgecolor='#5B84B1FF')
-        generate_area(abs(statistics), x_max, 'none', hatch='///', edgecolor='#5B84B1FF')
+        generate_area(x_min, -abs(statistics), 'none', hatch='//////', edgecolor='#5B84B1FF')
+        generate_area(abs(statistics), x_max, 'none', hatch='//////', edgecolor='#5B84B1FF')
     elif tails == Tail.LEFT_TAILED:
         generate_area(x_min, norm.ppf(alpha), '#FF7F50')
-        generate_area(x_min, statistics, 'none', hatch='///', edgecolor='#5B84B1FF')
+        generate_area(x_min, statistics, 'none', hatch='//////', edgecolor='#5B84B1FF')
     elif tails == Tail.RIGHT_TAILED:
         generate_area(norm.ppf(1 - alpha), x_max, '#FF7F50')
-        generate_area(statistics, x_max, 'none', hatch='///', edgecolor='#5B84B1FF')
+        generate_area(statistics, x_max, 'none', hatch='//////', edgecolor='#5B84B1FF')
 
     
 
@@ -100,9 +100,9 @@ def create_p_value_plot(statistics,alpha=0.05, tails=Tail.TWO_TAILED, x_min=-3, 
         legend_patches.append(mpatches.Patch(color='#FF7F50', label='Critical Region'.format(alpha)))
         legend_patches.append(mpatches.Patch(color='#5B84B1FF', label='p-value'.format(alpha)))
     elif lang == 'cs':
-        plt.title('p-hodnota z-test',fontsize=10)
+        plt.title('p-hodnota z-testu',fontsize=10)
         legend_patches.append(mpatches.Patch(color='#FF7F50', label='Kritický obor'.format(alpha)))
-        legend_patches.append(mpatches.Patch(color='#5B84B1FF', label='p-hodnota'.format(alpha)))
+        legend_patches.append(mpatches.Patch(facecolor='none', hatch='//////', edgecolor='#5B84B1FF', label='p-hodnota'.format(alpha)))
     plt.legend(handles=legend_patches)
     plt.xlabel('x')
 
