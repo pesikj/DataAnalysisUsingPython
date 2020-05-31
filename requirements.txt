@@ -2,3 +2,8 @@ matplotlib
 scipy
 numpy
 colour
+openpyxl
+pandas
+quantecon
+statsmodels
+openpyxl 
