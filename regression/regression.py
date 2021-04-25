@@ -2,21 +2,44 @@ import numpy as np
 import statsmodels.api as sm
 from openpyxl import load_workbook
 
-yCol = 6
-xCol = 2
-coefAlpha = 0.05
-x0 = 40
-predAlpha = 0.05
-
-wb = load_workbook(filename = 'data.xlsx')
-ws = wb.active
+MODE = "SP"
 
 x = []
 y = []
-for row in range(1, 26):
-    cell = ws.cell(column=yCol, row=row).value
-    y.append(ws.cell(column=yCol, row=row).value)
-    x.append(ws.cell(column=xCol, row=row).value)
+predAlpha = 0.1
+coefAlpha = 0.1
+
+if MODE == "SP":
+    wb = load_workbook(filename='P_2SM_zadani-1.xlsx')
+    ws = wb.worksheets[1]
+    student_number = input("Zadej osobní číslo: ")
+
+    for row in range(1, 150):
+        cell = ws.cell(column=1, row=row)
+        if cell.value == "číslo studenta":
+            for col in range(4, 50):
+                cell = ws.cell(column=col, row=row)
+                if cell.value:
+                    x.append(cell.value)
+        if cell.value == student_number:
+            for col in range(4, 50):
+                x0 = ws.cell(column=3, row=row).value
+                cell = ws.cell(column=col, row=row)
+                if cell.value:
+                    y.append(ws.cell(column=col, row=row).value)
+
+else:
+    wb = load_workbook(filename = 'data.xlsx')
+    ws = wb.active
+    yCol = 6
+    xCol = 2
+    x0 = 40
+
+    for row in range(1, 26):
+        cell = ws.cell(column=yCol, row=row).value
+        y.append(ws.cell(column=yCol, row=row).value)
+        x.append(ws.cell(column=xCol, row=row).value)
+
 x = sm.add_constant(x)
 
 mod = sm.OLS(y, x)
